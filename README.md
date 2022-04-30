@@ -28,14 +28,18 @@ The repo is based on [this][free_oracle_tf] article by [Arnold Galovic][arnold].
    > This command with generate a kubeconfig using the cluster APIs private IP and then
    > replace it with `127.0.0.1` / `localhost` so that port-forwarding can be used.
 6. Run `export ~/.kube/ociconfig` to set the kube config to the generated config
-7. Run `oci_connect_to_bastion_session` to create a bastion session (if one doesn't exist)
+7. Run `oci_bastion_session_kube_api -v` to create a bastion session (if one doesn't exist)
    and establish a port-forwarding session.
+   > I have noticed that if you create the session, the first ssh connection fails. Just re-run
+   > the script to connect.
 8. To verify cluster access, do a `kubectl get nodes`
 9. Enjoy
 
 ## Useful queries
 
-There are some useful oci commands as part of the [Makefile](Makefile)
+There are some useful oci wrapper commands in the [scripts](./scripts/) directory.
+You can run `source scripts/oci_env.sh` to expose a few convenience bash wrapper functions
+in the terminal.
 
 ## References
 
