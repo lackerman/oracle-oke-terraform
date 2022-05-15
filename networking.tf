@@ -44,15 +44,31 @@ resource "oci_core_security_list" "private_subnet" {
     protocol    = "all"
   }
 
+  dynamic "ingress_security_rules" {
+    for_each = local.cluster.nodePorts
+
+    content {
+      description = "Allow ${ingress_security_rules.value.type} access from the public subnet to the Node port ${ingress_security_rules.value.port}"
+      stateless   = false
+      source      = local.subnets.public
+      source_type = "CIDR_BLOCK"
+      protocol    = "6" # ICMP: 1 | TCP: 6 | UDP: 17 | ICMPv6: 58
+      tcp_options {
+        min = ingress_security_rules.value.port
+        max = ingress_security_rules.value.port
+      }
+    }
+  }
+
   ingress_security_rules {
-    description = "Allow HTTPS access from the public subnet"
-    stateless   = false
-    source      = local.subnets.public
+    protocol    = "6"
+    source      = "192.168.100.0/24"
     source_type = "CIDR_BLOCK"
-    protocol    = "6" # ICMP: 1 | TCP: 6 | UDP: 17 | ICMPv6: 58
+    stateless   = false
+
     tcp_options {
-      min = 443
-      max = 443
+      max = 10256
+      min = 10256
     }
   }
 }
@@ -72,6 +88,18 @@ resource "oci_core_security_list" "public_subnet" {
   }
 
   ingress_security_rules {
+    description = "Allow HTTP access from the Internet"
+    stateless   = false
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    protocol    = "6" # ICMP: 1 | TCP: 6 | UDP: 17 | ICMPv6: 58
+    tcp_options {
+      min = 80
+      max = 80
+    }
+  }
+
+  ingress_security_rules {
     description = "Allow HTTPS access from the Internet"
     stateless   = false
     source      = "0.0.0.0/0"
@@ -83,15 +111,31 @@ resource "oci_core_security_list" "public_subnet" {
     }
   }
 
+  dynamic "egress_security_rules" {
+    for_each = local.cluster.nodePorts
+
+    content {
+      description      = "Allow ${egress_security_rules.value.type} access to the private subnet to the Node port ${egress_security_rules.value.port}"
+      stateless        = false
+      destination      = local.subnets.private
+      destination_type = "CIDR_BLOCK"
+      protocol         = "6"
+      tcp_options {
+        min = egress_security_rules.value.port
+        max = egress_security_rules.value.port
+      }
+    }
+  }
+
   egress_security_rules {
-    description      = "Allow HTTPS access to the private subnet"
-    stateless        = false
-    destination      = local.subnets.private
+    destination      = "192.168.101.0/24"
     destination_type = "CIDR_BLOCK"
     protocol         = "6"
+    stateless        = false
+
     tcp_options {
-      min = 443
-      max = 443
+      max = 10256
+      min = 10256
     }
   }
 }
@@ -127,7 +171,7 @@ resource "oci_core_network_security_group" "pubvms" {
   compartment_id = var.compartment_id
   vcn_id         = module.vcn.vcn_id
 
-  display_name = "Bastion Security Group"
+  display_name = "Public VMs Security Group"
 }
 
 resource "oci_core_network_security_group_security_rule" "pubvms_ssh_access" {

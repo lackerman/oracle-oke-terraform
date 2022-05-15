@@ -27,8 +27,13 @@ locals {
       pods     = "10.1.0.0/16"
       services = "10.2.0.0/16"
     }
+
+    nodePorts = [
+      { type = "http", port = 30477 },
+      { type = "https", port = 32425 },
+    ]
   }
-  
+
   vm = {
     shape    = "VM.Standard.E2.1.Micro"
     image_id = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaajru7svi5fneczeqs23632tazdtthlxwkvzelwzl43esuixofbabq"
