@@ -1,8 +1,13 @@
+# Local secrets and config
+.env.local
+
 # Mac files
 .DS_Store
-.env.local
+
+# Editor files
 .vscode/*.log
 .history
+.idea
 
 .terraform.lock.hcl
 *.tfstate
