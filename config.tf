@@ -7,7 +7,7 @@ locals {
 
   cluster = {
     name    = "k8s"
-    version = "v1.22.5"
+    version = "v1.23.4"
 
     api = {
       is_public = false

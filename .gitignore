@@ -8,6 +8,7 @@
 .vscode/*.log
 .history
 .idea
+.gradle
 
 .terraform.lock.hcl
 *.tfstate

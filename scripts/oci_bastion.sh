@@ -6,7 +6,7 @@ oci_bastion_id() {
 }
 
 _replace_client_ips() {
-  oci bastion bastion get --bastion-id "$(oci_bastion_id)" \
+  oci bastion bastion get --bastion-id "${OCI_VAR_bastion_id}" \
     | jq --arg ip "${OCI_VAR_public_ip}" '.data["client-cidr-block-allow-list"] = [$ip]'
 }
 
@@ -15,14 +15,15 @@ oci_bastion_add_client_ip() {
     --from-json "$(_replace_client_ips)"
 }
 
-oci_bastion_session_activeid() {
-  oci bastion session list --bastion-id "$(oci_bastion_id)" --session-lifecycle-state "ACTIVE" \
+oci_bastion_session_active_id() {
+  oci bastion session list --bastion-id "${OCI_VAR_bastion_id}" --session-lifecycle-state "ACTIVE" \
   | jq -r '.data[0].id'
 }
 
 oci_bastion_session_create() {
   oci bastion session create-port-forwarding \
-    --bastion-id "$(oci_bastion_id)" \
+    --bastion-id "${OCI_VAR_bastion_id}" \
+    --session-ttl 10800 \
     --display-name oke-tunnel \
     --ssh-public-key-file ~/.ssh/id_rsa.pub \
     --key-type PUB \
@@ -57,10 +58,13 @@ oci_bastion_session_init() {
 ## and sets up a port forward session to the kubernetes cluster api.
 oci_bastion_session_kube_api() {
   debug="$1"
-  session_id="$(oci_bastion_session_activeid)"
-  if [[ -n "${session_id}" ]]; then
-    echo "Session already available: ${session_id}"
-  else
+
+  OCI_VAR_bastion_id="${oci_bastion_id}"
+  [ -z "${OCI_VAR_bastion_id}" ] && echo "Bastion ID is empty. Does the bastion exist?" && return 1
+  export OCI_VAR_bastion_id
+
+  session_id="$(oci_bastion_session_active_id)"
+  if [[ -z "${session_id}" ]]; then
     session_id="$(oci_bastion_session_init)"
   fi
 
