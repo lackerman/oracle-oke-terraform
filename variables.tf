@@ -20,3 +20,9 @@ variable "public_ip" {
   type        = string
   description = "The public IP of the client machine needing to use the bastion"
 }
+
+variable "enable_pubvm" {
+  default     = false
+  type        = string
+  description = "Whether or not to enable the publicly accessible VM"
+}

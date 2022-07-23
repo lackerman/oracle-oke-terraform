@@ -11,7 +11,7 @@ _replace_client_ips() {
 }
 
 oci_bastion_add_client_ip() {
-  oci bastion bastion update --bastion-id "$(oci_bastion_id)" \
+  oci bastion bastion update --bastion-id "${OCI_VAR_bastion_id}" \
     --from-json "$(_replace_client_ips)"
 }
 
@@ -59,7 +59,7 @@ oci_bastion_session_init() {
 oci_bastion_session_kube_api() {
   debug="$1"
 
-  OCI_VAR_bastion_id="${oci_bastion_id}"
+  OCI_VAR_bastion_id="$(oci_bastion_id)"
   [ -z "${OCI_VAR_bastion_id}" ] && echo "Bastion ID is empty. Does the bastion exist?" && return 1
   export OCI_VAR_bastion_id
 

@@ -14,12 +14,14 @@ locals {
     }
 
     nodes = {
-      count = 2
+      count  = 2
       config = {
         ocpus         = 2
         memory_in_gbs = 12
+        # https://docs.oracle.com/en-us/iaas/images/oracle-linux-8x/
+        # Architecture: aarch64
         shape         = "VM.Standard.A1.Flex"
-        image_id      = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaai36djewxxe6o4w7pubx2m45zjcy2uba3hvohkytlnyuydwoctubq"
+        image_id      = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaag2tvqc3bzz24effe6zt6whn7ylej4esbgtklczmjqodvcprux6eq"
       }
     }
 
@@ -35,8 +37,10 @@ locals {
   }
 
   vm = {
+    # https://docs.oracle.com/en-us/iaas/images/oracle-linux-8x/
+    # Architecture: AMD64
     shape    = "VM.Standard.E2.1.Micro"
-    image_id = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaajru7svi5fneczeqs23632tazdtthlxwkvzelwzl43esuixofbabq"
+    image_id = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaaod4dkc5kjoyptn7tcrxjmqkceibbfjmbs33kznypwddkf7vbgwyq"
   }
 
   tags = {

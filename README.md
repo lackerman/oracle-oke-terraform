@@ -12,7 +12,7 @@ The repo is based on [this][free_oracle_tf] article by [Arnold Galovic][arnold].
     * Tenancy OCID
     * Compartment OCID
    > You can get these automatically, based on your OCI configuration, and export them as
-   > environment variables for Terraform to consume, using `source bin/oci_env.sh`
+   > environment variables for Terraform to consume, using `source scripts/oci_env.sh`
 2. Initialise the Terraform working directory
    ```shell
    terraform init
@@ -37,7 +37,7 @@ The repo is based on [this][free_oracle_tf] article by [Arnold Galovic][arnold].
 
 ## Useful queries
 
-There are some useful oci wrapper commands in the [scripts](./scripts/) directory.
+There are some useful oci wrapper commands in the [scripts](./scripts) directory.
 You can run `source scripts/oci_env.sh` to expose a few convenience bash wrapper functions
 in the terminal.
 
