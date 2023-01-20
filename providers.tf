@@ -3,7 +3,7 @@ terraform {
     # https://registry.terraform.io/providers/oracle/oci/latest/docs
     oci = {
       source  = "oracle/oci"
-      version = "4.85.0"
+      version = "4.104.0"
     }
   }
 }
