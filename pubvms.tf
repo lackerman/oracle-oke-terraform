@@ -1,5 +1,5 @@
 resource "oci_core_instance" "pubvm" {
-  count = var.enable_pubvm ? 1 : 0
+  count = local.vm.enabled ? 1 : 0
 
   display_name        = "pubvm"
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name

@@ -12,6 +12,11 @@ oci_region_images() {
   		| jq -r '.[] | [.name, .id] | join(", ")'
 }
 
+oci_node_images() {
+  oci ce node-pool-options get --node-pool-option-id all \
+      | jq -r '[.data.sources[] | {name:."source-name", id:."image-id"}] | sort_by(.name)'
+}
+
 ## List terraformed resources ('Terraformed' freeform tag is present)
 oci_list_terraform_resources() {
   # OCI Search Docs
